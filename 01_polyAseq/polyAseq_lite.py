@@ -53,7 +53,7 @@ def split_barcodes_core(fastq_dir,
 		error_idx = find_error_index_from_retcodes(retcodes)
 		if error_idx:
 			for j in error_idx:
-				print('an error in the command [%s]' % arg_sets[j][0])
+				print(('an error in the command [%s]' % arg_sets[j][0]))
 			raise RuntimeError('there are some errors in split_barcdes_core()')
 
 	return arg_sets
@@ -118,7 +118,7 @@ class cPolyAseq:
 
 	def print_msg(self,mS,sstep_name):
 		msg = "[%02d-%s][%02d-%s]"%(mS.cnt,mS.name,self.sstep,sstep_name)
-		print('%s in progress'%msg)
+		print(('%s in progress'%msg))
 
 	def split_barcodes(self):
 		self.step += 1 #1
@@ -440,7 +440,7 @@ class cPolyAseq:
 		self.print_msg(self.mSteps[-1], sstep_name)
 		self.gfa_bam_dir = os.path.join(self.mSteps[-1].get_out_dir(self.work_dir), 'output','rm_int_a_7of10or6')
 		
-		print(self.gfa_bam_dir)
+		print((self.gfa_bam_dir))
 		
 		prog_path = self.pconf.sections[sstep_name]['bin_path']
 

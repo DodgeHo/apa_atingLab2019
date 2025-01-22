@@ -27,8 +27,8 @@ outbase = re.sub(r'\.fastq\.gz$', '', args.inpath)
 outbase = os.path.basename(outbase)
 outbase = os.path.join(args.outdir,outbase)
 
-print "Reading FASTQ.GZ file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading FASTQ.GZ file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 a_path = outbase + "_A.fastq.gz"
@@ -53,6 +53,9 @@ with gzip.open(args.inpath,'r') as f:
 		# work in blocks of 4
 		if lineno == 4:
 			seq = record[1].rstrip()
+			if isinstance(seq, bytes):  # 检查 seq 是否是 bytes 类型
+				seq = seq.decode('utf-8')  # 如果是 bytes，解码为字符串
+			# 如果 seq 已经是字符串，直接跳过解码
 			loc = seq.find("AAAA")
 			mypos = -1
 			myscore = -1
@@ -65,6 +68,9 @@ with gzip.open(args.inpath,'r') as f:
 					myscore = score
 					break
 				else:
+					if isinstance(seq, bytes):  # 检查 seq 是否是 bytes 类型
+						seq = seq.decode('utf-8')  # 如果是 bytes，解码为字符串
+					# 如果 seq 已经是字符串，直接跳过解码
 					loc = seq.find("AAAA",loc+1,len(seq))
 			#seq = record[3].rstrip()
 			if (mypos==-1)&(myscore==-1):
@@ -80,9 +86,9 @@ with gzip.open(args.inpath,'r') as f:
 				#print record[3][0:mypos] + " | " + record[3][mypos:len(seq)]
 				if(len(cut)>0):
 					out_a.write(record[0])
-					out_a.write(cut + "\n")
+					out_a.write((cut + "\n").encode('utf-8'))  # 将字符串编码为字节后写入
 					out_a.write(record[2])
-					out_a.write(record[3][0:mypos] + "\n")
+					out_a.write(record[3][0:mypos] + ("\n").encode('utf-8'))
 				else:
 					out_alla.write(record[0])
 					out_alla.write(record[1])
@@ -103,7 +109,7 @@ with gzip.open(args.inpath,'r') as f:
 			record = []
 			lineno = 0
 			if (recno % 1000000) == 0:
-				print "Done with Record Number: " + str(recno)
+				print("Done with Record Number: " + str(recno))
 				sys.stdout.flush()
 			recno += 1
 		lineno += 1
@@ -114,19 +120,19 @@ with gzip.open(args.inpath,'r') as f:
 #print tag_hist
 
 csvpath = outbase + "_TagLenghAfterACut.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["Length","Count"])
-for key, value in tag_hist.items():
+for key, value in list(tag_hist.items()):
 	writer.writerow([key, value])
 
 csvpath = outbase + "_AsInWindow.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["AsInWindow","Count"])
-for key, value in cut_hist.items():
+for key, value in list(cut_hist.items()):
 	writer.writerow([key, value])
 
 

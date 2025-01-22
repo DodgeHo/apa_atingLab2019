@@ -69,8 +69,8 @@ if args.dolog==True:
 	log_file = open(outbase + "_rm_internal_a.log","w")
 	sys.stdout = log_file
 
-print "Reading BAM file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading BAM file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 if args.doprint:
@@ -93,10 +93,10 @@ ends = []
 isrevs = []
 #seqs = []
 
-print "Loading data from BAM to RAM"
+print("Loading data from BAM to RAM")
 
 want = []
-for i in xrange(1,23):
+for i in range(1,23):
 	want.append("chr" + str(i))
 want.append("chrX")
 want.append("chrY")
@@ -150,7 +150,7 @@ for read in samfile.fetch():
 
 			if (win_a >= (int(args.win)-int(args.mm)))|(firsts==True):
 				#newbam_a.write(read)
-				for hex2,offsets in myhex.iteritems():
+				for hex2,offsets in myhex.items():
 					a_hex_hist[hex2] += 1
 					if args.doprint and hex2!='NONE':
 						for offset in offsets:
@@ -162,7 +162,7 @@ for read in samfile.fetch():
 			else:
 				#newbam_noa.write(read)
 				if args.doprint:
-					for hex2,offsets in myhex.iteritems():
+					for hex2,offsets in myhex.items():
 						noa_hex_hist[hex2] += 1
 						if args.doprint and hex2!='NONE':
 							for offset in offsets:
@@ -193,7 +193,7 @@ for read in samfile.fetch():
 			if (win_a >= (int(args.win)-int(args.mm)))|(firsts==True):
 				#newbam_a.write(read)
 				if args.doprint:
-					for hex2,offsets in myhex.iteritems():
+					for hex2,offsets in myhex.items():
 						a_hex_hist[hex2] += 1
 						if args.doprint and hex2!='NONE':
 							for offset in offsets:
@@ -204,7 +204,7 @@ for read in samfile.fetch():
 			else:
 				#newbam_noa.write(read)
 				if args.doprint:
-					for hex2,offsets in myhex.iteritems():
+					for hex2,offsets in myhex.items():
 						noa_hex_hist[hex2] += 1
 						if args.doprint and hex2!='NONE':
 							for offset in offsets:
@@ -216,7 +216,7 @@ for read in samfile.fetch():
 
 		recno += 1
 		if (recno % 100000 == 0):
-			print "Done with Record Number: " + str(recno)
+			print("Done with Record Number: " + str(recno))
 			sys.stdout.flush()
 			#break
 
@@ -228,15 +228,15 @@ samfile.close()
 #print a_hex_hist
 #print noa_hex_hist
 
-print "Saving hexamer histogram CSV"
+print("Saving hexamer histogram CSV")
 csvpath = outbase + "_HexamerCounts.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["group","hexamer","count"])
-for key, value in a_hex_hist.items():
+for key, value in list(a_hex_hist.items()):
 	writer.writerow(["genomicA", key, value])
-for key, value in noa_hex_hist.items():
+for key, value in list(noa_hex_hist.items()):
 	writer.writerow(["noGenomicA", key, value])
 
 

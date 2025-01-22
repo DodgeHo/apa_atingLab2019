@@ -27,7 +27,7 @@ echo "6. downloading ensembl hg19/b37 gtf file ..."
 ensembl_gtf_url="http://ftp.ensembl.org/pub/grch37/release-87/gtf/homo_sapiens/Homo_sapiens.GRCh37.87.gtf.gz"
 rm -rf ${refd}/ensembl/*.gtf.gz*
 wget -P ${refd}/ensembl $ensembl_gtf_url
-gunzip ${refd}/ensembl/Homo_sapiens.GRCh37.87.gtf.gz
+gunzip -f ${refd}/ensembl/Homo_sapiens.GRCh37.87.gtf.gz
 echo "Done."
 
 echo "7. adding chr to the contig headers in b37 gtf ..."
@@ -41,6 +41,6 @@ bowtie2-build ${refd}/hg19_PhiX.fa ${refd}/hg19_PhiX
 echo "9. Download 01_polyAseq.data ..."
 # apa_atingLab2019_data_url="http://apa_atingLab2019_data_url"
 
-#polyAseq_data_url="https://s3.amazonaws.com/apa2019/01_polyAseq.data.tar.gz"
-# wget -P $polyAseq_data_url
+polyAseq_data_url="https://s3.amazonaws.com/apa2019/01_polyAseq.data.tar.gz"
+wget -P ./ $polyAseq_data_url
 tar zxvf ./01_polyAseq.data.tar.gz

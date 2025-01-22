@@ -34,8 +34,8 @@ if args.dolog==True:
 	log_file = open(outbase + "_collapse_dups.log","w")
 	sys.stdout = log_file
 
-print "Reading BAM file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading BAM file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 # --------------------------------------------------------------------
@@ -50,7 +50,7 @@ strands = []
 lens = []
 #seqs = []
 
-print "Loading data from BAM to RAM"
+print("Loading data from BAM to RAM")
 
 recno=0
 for read in samfile.fetch():
@@ -70,7 +70,7 @@ for read in samfile.fetch():
 
 	recno += 1
 	if (recno % 1000000) == 0:
-		print "Done with Record Number: " + str(recno)
+		print("Done with Record Number: " + str(recno))
 		sys.stdout.flush()
 		#break
 #print tags
@@ -81,7 +81,7 @@ for read in samfile.fetch():
 
 samfile.close()
 
-print "Creading pandas DF"
+print("Creading pandas DF")
 df = pd.DataFrame(data={'bamrow': bamrow, 'tag': tags, 'chr': chrs, 'pos': poss, 'strand': strands, 'len': lens})
 #df.sort(['chr','pos','strand','tag'])
 
@@ -96,7 +96,7 @@ df = pd.DataFrame(data={'bamrow': bamrow, 'tag': tags, 'chr': chrs, 'pos': poss,
 # --------------------------------------------------------------------
 # Step 2: Loop over the DF and flag the duplicates
 
-print "Detect/Collapse Duplicates"
+print("Detect/Collapse Duplicates")
 
 byCPLS = df.groupby(["chr","pos","len","strand"])
 byCPLST = df.groupby(["chr","pos","len","strand","tag"])
@@ -112,7 +112,7 @@ byCPS_sizes = byCPS.agg(len)
 
 bytag_want = set(byCPLST.first().bamrow)
 
-print "Saving Duplication Vectors"
+print("Saving Duplication Vectors")
 #savetxt(outbase + "_ByPosSizes.csv", bypos_sizes, delimiter=",", fmt='%i')
 #savetxt(outbase + "_ByTagSizes.csv", bytag_sizes, delimiter=",", fmt='%i')
 
@@ -134,7 +134,7 @@ byCPS_sizes.to_csv(outbase + "_ByCPS.csv")
 # Step 3: Write out a filtered BAM file
 
 # Iterate over it again, and dump out to new BAM if the ID checks out
-print "Writing new BAM with just the de-duplicated reads"
+print("Writing new BAM with just the de-duplicated reads")
 samfile = pysam.AlignmentFile(args.inpath, "rb")
 newbam = pysam.AlignmentFile(outbase + "_DePcrDup.bam", "wb", template=samfile)
 
@@ -149,7 +149,7 @@ for read in samfile.fetch():
 
 	recno += 1
 	if (recno % 1000000) == 0:
-		print "Done with Record Number: " + str(recno)
+		print("Done with Record Number: " + str(recno))
 		sys.stdout.flush()
 		#break
 #print tags

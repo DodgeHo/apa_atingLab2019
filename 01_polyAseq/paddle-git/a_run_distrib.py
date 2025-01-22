@@ -28,8 +28,8 @@ outbase = re.sub(r'\.fastq\.gz$', '', args.inpath)
 outbase = os.path.basename(outbase)
 outbase = os.path.join(args.outdir,outbase)
 
-print "Reading FASTQ.GZ file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading FASTQ.GZ file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 alen = []
@@ -46,9 +46,11 @@ with gzip.open(args.inpath,'r') as f:
 			#print "got record"
 			#print record[1]
 			seq = record[1].rstrip()
+			if isinstance(seq, bytes):  # 检查是否是二进制数据
+				seq = seq.decode('utf-8')  # 将二进制数据解码为字符串
 			find = regex.findall(r'(A*){s<=' + str(args.mm) + '}', seq)
 			#print find
-			lens = map(len,find)
+			lens = list(map(len,find))
 			mymax = max(lens)
 			#alen.append(mymax)
 			hist[mymax] += 1
@@ -57,7 +59,7 @@ with gzip.open(args.inpath,'r') as f:
 			record = []
 			lineno = 0
 			if (recno % 1000000) == 0:
-				print "Done with Record Number: " + str(recno)
+				print("Done with Record Number: " + str(recno))
 				sys.stdout.flush()
 			recno += 1
 		lineno += 1
@@ -65,11 +67,11 @@ with gzip.open(args.inpath,'r') as f:
 #print hist
 
 csvpath = outbase + "_LongestARunCounts.csv"
-print "Writing histograms: " + csvpath
+print("Writing histograms: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["LongestARunInSequence","Count"])
-for key, value in hist.items():
+for key, value in list(hist.items()):
 	writer.writerow([key, value])
 
 

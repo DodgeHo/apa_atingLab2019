@@ -18,7 +18,7 @@ def par_shell_runs(arg_sets,
 
 	# Start my pool
 	pool = ThreadPool(ncpu)
-	print("Running %d [%s] jobs using %d processors..." % (len(arg_sets), job_name, ncpu))
+	print(("Running %d [%s] jobs using %d processors..." % (len(arg_sets), job_name, ncpu)))
 
 	start_time = time.time()
 	# Run tasks
@@ -26,7 +26,7 @@ def par_shell_runs(arg_sets,
 	for arg_tuple in arg_sets:
 		results.append(pool.apply_async(run_syscmd, arg_tuple))
 
-	print "Waiting for result..."
+	print("Waiting for result...")
 
 	# Close the pool and wait for each running task to complete
 	pool.close()
@@ -36,10 +36,10 @@ def par_shell_runs(arg_sets,
 	retcodes = []
 	for result in results:
 		retcode, out = result.get()
-		print("out: {} err: {}".format(out, retcode))
+		print(("out: {} err: {}".format(out, retcode)))
 		retcodes.append(retcode)
 
-	print "Elapsed time: %.2f secs" % (time.time() - start_time)
+	print("Elapsed time: %.2f secs" % (time.time() - start_time))
 	return retcodes
 
 def find_error_index_from_retcodes(retcodes):

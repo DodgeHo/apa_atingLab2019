@@ -26,8 +26,8 @@ outbase = re.sub(r'\.fastq\.gz$', '', args.inpath)
 outbase = os.path.basename(outbase)
 outbase = os.path.join(args.outdir,outbase)
 
-print "Reading FASTQ.GZ file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading FASTQ.GZ file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 a_path = outbase + "_A.fastq.gz"
@@ -102,7 +102,7 @@ with gzip.open(args.inpath,'r') as f:
 			record = []
 			lineno = 0
 			if (recno % 1000000) == 0:
-				print "Done with Record Number: " + str(recno)
+				print("Done with Record Number: " + str(recno))
 				sys.stdout.flush()
 			recno += 1
 		lineno += 1
@@ -113,19 +113,19 @@ with gzip.open(args.inpath,'r') as f:
 #print tag_hist
 
 csvpath = outbase + "_TagLenghAfterACut.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["Length","Count"])
-for key, value in tag_hist.items():
+for key, value in list(tag_hist.items()):
 	writer.writerow([key, value])
 
 csvpath = outbase + "_AsInWindow.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["AsInWindow","Count"])
-for key, value in cut_hist.items():
+for key, value in list(cut_hist.items()):
 	writer.writerow([key, value])
 
 

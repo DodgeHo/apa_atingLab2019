@@ -42,6 +42,17 @@ index$file <- str_replace(str_replace(index$file,"fastq/",""),"\\.fastq\\.gz",""
 
 #index$key <- paste0("output/chop_a_tails/",index$file,"_",index$barcode,"_A.fastq.gz")
 index$key <- paste0(args$qc_fastq_dir,"/",index$file,"_",index$barcode,"_A.fastq.gz")
+# 只保留 index$key 中存在于 fastq 的部分
+index <- index[index$key %in% fastq, ]
+
+# 检查是否有有效的文件
+if (nrow(index) == 0) {
+  stop("No valid files found. Please check the fastq_index.csv file and the input directory.")
+}
+
+# 打印过滤后的 index$key
+print("Filtered index$key:")
+print(index$key)
 
 stopifnot(index$key %in% fastq)
 bt2cmd = sprintf("bowtie2 -p %d -x %s -U ",args$ncpu,args$ref_prefix)

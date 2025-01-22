@@ -68,8 +68,8 @@ if args.dolog==True:
 	log_file = open(outbase + "_rm_internal_a.log","w")
 	sys.stdout = log_file
 
-print "Reading BAM file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading BAM file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 if args.doprint:
@@ -92,17 +92,17 @@ ends = []
 isrevs = []
 #seqs = []
 
-print "Loading data from BAM to RAM"
+print("Loading data from BAM to RAM")
 
 want = []
 
 if args.chr_header == 1:
-	for i in xrange(1,23):
+	for i in range(1,23):
 		want.append("chr" + str(i))
 	want.append("chrX")
 	want.append("chrY")
 else:
-	for i in xrange(1,23):
+	for i in range(1,23):
 		want.append(str(i))
 	want.append("X")
 	want.append("Y")
@@ -201,7 +201,7 @@ for read in samfile.fetch():
 
 		recno += 1
 		if (recno % 100000 == 0):
-			print "Done with Record Number: " + str(recno)
+			print("Done with Record Number: " + str(recno))
 			sys.stdout.flush()
 			#break
 
@@ -213,15 +213,15 @@ newbam_noa.close()
 #print a_hex_hist
 #print noa_hex_hist
 
-print "Saving hexamer histogram CSV"
+print("Saving hexamer histogram CSV")
 csvpath = outbase + "_HexamerCounts.csv"
-print "Writing histogram: " + csvpath
+print("Writing histogram: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["group","hexamer","count"])
-for key, value in a_hex_hist.items():
+for key, value in list(a_hex_hist.items()):
 	writer.writerow(["genomicA", key, value])
-for key, value in noa_hex_hist.items():
+for key, value in list(noa_hex_hist.items()):
 	writer.writerow(["noGenomicA", key, value])
 
 if args.doprint:

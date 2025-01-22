@@ -75,7 +75,7 @@ def count_num_lines(file2):
 		except: num_lines = 0
 	else:
 		num_lines=0
-		print 'num_lines=0'
+		print('num_lines=0')
 	return num_lines
 
 def intersect(a, b):
@@ -154,7 +154,7 @@ def get_stat_dic(myDic,mode):
 	
 	if mode == 'min':
 		myStat = 1e7
-		for val in myDic.itervalues():
+		for val in myDic.values():
 			if val<myStat:
 				myStat = val
 	return myStat
@@ -226,7 +226,7 @@ def run_syscmd_old(cmd_entries, stdout_fn=None, stderr_fn=None, handle_err=False
 	if stderr_fp: stderr_fp.close()
 
 	if err_flag > 0:
-		print 'retcode:', retcode
+		print('retcode:', retcode)
 		if handle_err:
 			return retcode, cmd_str
 		else:
@@ -253,7 +253,7 @@ def run_syscmd(cmd_str, stdout_fn=None, stderr_fn=None, handle_err=False):
 	else:
 		stderr_fp = sp.PIPE
 
-	print('running [%s]'%cmd_str)
+	print(('running [%s]'%cmd_str))
 	err_flag = False
 	try:
 		proc = sp.Popen(cmd_str, stdout=stdout_fp, stderr=stderr_fp, shell=True, close_fds=True)
@@ -266,7 +266,7 @@ def run_syscmd(cmd_str, stdout_fn=None, stderr_fn=None, handle_err=False):
 
 	retcode = int(proc.returncode)
 	if err_flag or retcode != 0:
-		print 'retcode:', retcode
+		print('retcode:', retcode)
 		if handle_err:
 			return retcode, cmd_str
 		else:
@@ -284,29 +284,29 @@ def get_process_msg_handler(log_dir, step_name):
 	
 def msgout(mode,msg,call_from=inspect.stack()[1][3]):
 	if mode in ['out','notice']:
-		print '%s [INFO:%s] %s\n'%(str(datetime.now()), call_from, msg)
+		print('%s [INFO:%s] %s\n'%(str(datetime.now()), call_from, msg))
 	elif mode == 'warning':
-		print '%s [WARNING:%s] %s'%(str(datetime.now()), call_from, msg)
+		print('%s [WARNING:%s] %s'%(str(datetime.now()), call_from, msg))
 	elif mode == 'banner':
-		print '############################################'
-		print '%s [PART:%s] %s\n'%(str(datetime.now()), call_from, msg)
-		print '############################################'
+		print('############################################')
+		print('%s [PART:%s] %s\n'%(str(datetime.now()), call_from, msg))
+		print('############################################')
 
 def normalize_dic(myDic,mode='sum'):
 	
 	if mode == 'max':
 		denom = -1e7
-		for val in myDic.itervalues():
+		for val in myDic.values():
 			if val>denom:
 				denom = val
 	elif mode == 'sum':
 		denom = 0.
-		for val in myDic.itervalues():
+		for val in myDic.values():
 			denom += val
 	else:
-		print 'mode[%s] is not registered'%mode
+		print('mode[%s] is not registered'%mode)
 		raise ValueError
-	for key in myDic.keys():
+	for key in list(myDic.keys()):
 		myDic[key] /= denom
 		
 	return myDic
@@ -465,7 +465,7 @@ def get_file_base(file_path,file_ext):
 	if file_path.endswith(file_ext):
 		file_base = file_path.split(file_ext)[0]
 
-	print 'file_base:',file_base
+	print('file_base:',file_base)
 	return file_base
 
 class py_struct(object):
@@ -473,7 +473,7 @@ class py_struct(object):
 
 		self.set_attr(**kwargs)
 
-		if 'source' not in self.__dict__.keys():
+		if 'source' not in list(self.__dict__.keys()):
 			self.source = 'py_struct'
 
 	def tup2dic(self, dbrec):
@@ -501,9 +501,9 @@ class py_struct(object):
 		:param kwargs:
 		:return:
 		'''
-		for key, value in kwargs.iteritems():
+		for key, value in kwargs.items():
 
-			if key in self.__dict__.keys():
+			if key in list(self.__dict__.keys()):
 				if not value or (type(self.__dict__[key]) != list):
 					self.__dict__[key] = value
 				else:
@@ -515,16 +515,16 @@ class py_struct(object):
 				self.__dict__[key] = value
 
 	def dedup_attr(self):
-		for key, value in self.__dict__.iteritems():
+		for key, value in self.__dict__.items():
 			if type(value) is list:
 				self.__dict__[key] = list(set(value))
 
 	def rm_attr(self):
-		for key in self.__dict__.keys():
+		for key in list(self.__dict__.keys()):
 			self.__dict__.pop(key, None)
 
 	def reset_attr(self,excl_keys=['name']):
-		for key, value in self.__dict__.iteritems():
+		for key, value in self.__dict__.items():
 			if key not in excl_keys:
 				value_type = type(value)
 				if value_type is list:
@@ -562,7 +562,7 @@ def count_existing_paths(fpaths):
 			elif os.path.exists(fpath):
 				fcnt+=1
 			else:
-				print('the file path[%s] does not exist'%fpath)
+				print(('the file path[%s] does not exist'%fpath))
 	else:
 		print('input lists (fpaths) are empty')
 

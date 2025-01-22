@@ -14,7 +14,7 @@ import sys
 import itertools
 
 def hamming1(str1, str2):
-	 return sum(itertools.imap(str.__ne__, str1, str2))
+	 return sum(map(str.__ne__, str1, str2))
 
 def mymatcher(mycode):
 	# return difflib.SequenceMatcher(None,myseq,mycode).ratio()
@@ -45,8 +45,8 @@ outbase = re.sub(r'\.gz$', '', outbase)
 outbase = os.path.basename(outbase)
 outbase = os.path.join(args.outdir,outbase)
 
-print "Reading FASTQ.GZ file: " + args.inpath
-print "Basename for output files: " + outbase
+print("Reading FASTQ.GZ file: " + args.inpath)
+print("Basename for output files: " + outbase)
 sys.stdout.flush()
 
 #barcodes = array(['TGACCA','GCCAAT','CTTGTA','AAGTGC'])
@@ -94,7 +94,7 @@ for line in f:
 		#print "got record"
 		myseq = record[1][0:6]
 		#print myseq
-		scores = array(map(mymatcher,barcodes))
+		scores = array(list(map(mymatcher,barcodes)))
 		#print scores
 		#print min(scores)
 
@@ -119,22 +119,22 @@ for line in f:
 		elif matched.size == 0:
 			#print "Matched no barcodes!"
 			unk_hist[myseq] += 1
-			out_unk.write(thename)
-			out_unk.write(theseq)
-			out_unk.write(thesep)
-			out_unk.write(thequals)
+			out_unk.write(thename.encode('utf-8'))
+			out_unk.write(theseq.encode('utf-8'))
+			out_unk.write(thesep.encode('utf-8'))
+			out_unk.write(thequals.encode('utf-8'))
 		elif matched.size == 1:
 			#print "Matched Barcode: " + matched[0] + " for " + myseq + " (mismatches=" + str(min(scores)) + ")"
-			outs[scores==min(scores)][0].write(thename)
-			outs[scores==min(scores)][0].write(theseq)
-			outs[scores==min(scores)][0].write(thesep)
-			outs[scores==min(scores)][0].write(thequals)
+			outs[scores==min(scores)][0].write(thename.encode('utf-8'))
+			outs[scores==min(scores)][0].write(theseq.encode('utf-8'))
+			outs[scores==min(scores)][0].write(thesep.encode('utf-8'))
+			outs[scores==min(scores)][0].write(thequals.encode('utf-8'))
 			outs_hist[scores==min(scores)][0][myseq] += 1
 		# reset iteration
 		record = []
 		lineno = 0
 		if (recno % 1000000) == 0:
-			print "Done with Record Number: " + str(recno)
+			print("Done with Record Number: " + str(recno))
 			sys.stdout.flush()
 		recno += 1
 	lineno += 1
@@ -149,15 +149,15 @@ out_unk.close()
 #print outs_hist
 
 csvpath = outbase + "_BarcodeCounts.csv"
-print "Writing histograms: " + csvpath
+print("Writing histograms: " + csvpath)
 sys.stdout.flush()
 writer = csv.writer(open(csvpath, 'w'))
 writer.writerow(["WantedBarcode","IncludedBarcode","Count"])
 for b in barcodes:
 	#print b
 	myhist=outs_hist[barcodes==b][0]
-	for key, value in myhist.items():
+	for key, value in list(myhist.items()):
 		writer.writerow([b, key, value])
 
-for key, value in unk_hist.items():
+for key, value in list(unk_hist.items()):
 	writer.writerow(["OTHER", key, value])
