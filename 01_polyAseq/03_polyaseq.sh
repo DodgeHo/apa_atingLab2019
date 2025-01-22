@@ -2,7 +2,7 @@
 
 echo "setting python configurations ..."
 
-export PPD=/e/apa_atingLab2019/01_polyAseq  # 如果项目在 /content
+export PPD=$HOME/projects/apa_atingLab2019/01_polyAseq
 export PYTHONPATH=$PPD:$PYTHONPATH
 export PADD_GIT=$PPD/paddle-git
 
